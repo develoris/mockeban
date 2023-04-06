@@ -1,0 +1,15 @@
+# Generated manifest.yml based on template version 0.1.0
+# appName = ZBTP_POC1_GTW_SRV
+# language=nodejs
+# multitenancy=false
+---
+applications:
+# -----------------------------------------------------------------------------------
+# Backend Service
+# -----------------------------------------------------------------------------------
+- name: ZBTP_POC1_GTW_SRV-srv
+  random-route: true  # for development only
+  path: gen/srv
+  memory: 256M
+  buildpack: nodejs_buildpack
+
