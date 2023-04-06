@@ -1,40 +1,124 @@
-_schema-version: '3.1'
+_schema-version: "3.1"
 ID: mockebanApp
+description: A simple CAP project.
 version: 1.0.0
-description: "A simple CAP project."
+modules:
+- name: mockebanApp-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: mockebanApp-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm-ci
+- name: mockebanApp-db-deployer
+  type: hdb
+  path: db
+  requires:
+  - name: mockebanApp-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: mockebanApp-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: mockebanApp-destination-service
+    parameters:
+      content-target: true
+  - name: mockebanApp_html_repo_host
+    parameters:
+      service-key:
+        name: mockebanApp_html_repo_host-key
+  - name: uaa_mockebanApp
+    parameters:
+      service-key:
+        name: uaa_mockebanApp-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: hana_app_mockebanApp_html_repo_host
+          ServiceInstanceName: mockebanApp-html5-app-host-service
+          ServiceKeyName: mockebanApp_html_repo_host-key
+          sap.cloud.service: hana.app
+        - Authentication: OAuth2UserTokenExchange
+          Name: hana_app_uaa_mockebanApp
+          ServiceInstanceName: mockebanApp-xsuaa-service
+          ServiceKeyName: uaa_mockebanApp-key
+          sap.cloud.service: hana.app
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: mockebanApp-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: mockebanApp_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - ebanset.zip
+      name: ebanset
+      target-path: resources/
+- name: ebanset
+  type: html5
+  path: app/ebanset
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: mockebanApp-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: mockebanApp-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: mockebanApp-destination-service
+    service-plan: lite
+- name: mockebanApp_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: mockebanApp-html5-app-host-service
+    service-plan: app-host
+- name: uaa_mockebanApp
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: mockebanApp-xsuaa-service
+    service-plan: application
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npx -p @sap/cds-dk cds build --production
-modules:
-  - name: mockebanApp-srv
-    type: nodejs
-    path: gen/srv
-    parameters:
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires:
-      - name: mockebanApp-db
-
-  - name: mockebanApp-db-deployer
-    type: hdb
-    path: db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: mockebanApp-db
-
-resources:
-  - name: mockebanApp-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
+  - builder: custom
+    commands:
+    - npx -p @sap/cds-dk cds build --production

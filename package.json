@@ -1,41 +1,50 @@
 {
-  "name": "mockebanApp",
-  "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@sap/cds": "^6",
-    "@sap/hana-client": "^2.16.21",
-    "express": "^4",
-    "hdb": "^0.19.0"
-  },
-  "scripts": {
-    "start": "cds-serve"
-  },
-  "cds": {
-    "build": {
-      "tasks": [
-        {
-          "for": "hana",
-          "dest": "../db"
+    "name": "mockebanApp",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@sap/cds": "^6",
+        "@sap/hana-client": "^2.16.21",
+        "express": "^4",
+        "hdb": "^0.19.0"
+    },
+    "scripts": {
+        "start": "cds-serve",
+        "watch-ebanset": "cds watch --open ebanset/webapp/index.html?sap-ui-xx-viewCache=false",
+        "undeploy": "cf undeploy mockebanApp --delete-services --delete-service-keys --delete-service-brokers",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive",
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    },
+    "cds": {
+        "build": {
+            "tasks": [
+                {
+                    "for": "hana",
+                    "dest": "../db"
+                },
+                {
+                    "for": "node-cf"
+                }
+            ]
         },
-        {
-          "for": "node-cf"
+        "requires": {
+            "db": {
+                "kind": "hana-cloud"
+            }
+        },
+        "hana": {
+            "deploy-format": "hdbtable"
         }
-      ]
     },
-    "requires": {
-      "db": {
-        "kind": "hana-cloud"
-      }
+    "devDependencies": {
+        "@sap/hdi-deploy": "4.6.0",
+        "@sap/ux-specification": "^1.108.2",
+        "rimraf": "^3.0.2"
     },
-    "hana": {
-      "deploy-format": "hdbtable"
-    }
-  },
-  "devDependencies": {
-    "@sap/hdi-deploy": "4.6.0"
-  }
+    "sapux": [
+        "app/ebanset"
+    ]
 }
