@@ -1,4 +1,6 @@
 using com.cnhi.btp.ebansrvs from '../db/eban';
+
+// @requires: 'authenticated-user'
 service EbanService {
 
  entity ebanSet

@@ -16,7 +16,9 @@
         "watch-ebanset": "cds watch --open ebanset/webapp/index.html?sap-ui-xx-viewCache=false",
         "undeploy": "cf undeploy mockebanApp --delete-services --delete-service-keys --delete-service-brokers",
         "build": "rimraf resources mta_archives && mbt build --mtar archive",
-        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+        "watch-ebansetfreestyle": "cds watch --open ebansetfreestyle/webapp/index.html?sap-ui-xx-viewCache=false",
+        "watch-ebanfreestyle2": "cds watch --open ebanfreestyle2/webapp/index.html?sap-ui-xx-viewCache=false"
     },
     "cds": {
         "build": {
@@ -45,6 +47,8 @@
         "rimraf": "^3.0.2"
     },
     "sapux": [
-        "app/ebanset"
+        "app/ebanset",
+        "app/ebansetfreestyle",
+        "app/ebanfreestyle2"
     ]
 }

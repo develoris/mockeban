@@ -67,9 +67,37 @@ modules:
       - ebanset.zip
       name: ebanset
       target-path: resources/
+    - artifacts:
+      - ebansetfreestyle.zip
+      name: ebansetfreestyle
+      target-path: resources/
+    - artifacts:
+      - ebanfreestyle2.zip
+      name: ebanfreestyle2
+      target-path: resources/
 - name: ebanset
   type: html5
   path: app/ebanset
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: ebansetfreestyle
+  type: html5
+  path: app/ebansetfreestyle
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: ebanfreestyle2
+  type: html5
+  path: app/ebanfreestyle2
   build-parameters:
     build-result: dist
     builder: custom
