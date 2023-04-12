@@ -13,12 +13,9 @@
     },
     "scripts": {
         "start": "cds-serve",
-        "watch-ebanset": "cds watch --open ebanset/webapp/index.html?sap-ui-xx-viewCache=false",
         "undeploy": "cf undeploy mockebanApp --delete-services --delete-service-keys --delete-service-brokers",
         "build": "rimraf resources mta_archives && mbt build --mtar archive",
-        "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-        "watch-ebansetfreestyle": "cds watch --open ebansetfreestyle/webapp/index.html?sap-ui-xx-viewCache=false",
-        "watch-ebanfreestyle2": "cds watch --open ebanfreestyle2/webapp/index.html?sap-ui-xx-viewCache=false"
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
     },
     "cds": {
         "build": {
@@ -45,10 +42,5 @@
         "@sap/hdi-deploy": "4.6.0",
         "@sap/ux-specification": "^1.108.2",
         "rimraf": "^3.0.2"
-    },
-    "sapux": [
-        "app/ebanset",
-        "app/ebansetfreestyle",
-        "app/ebanfreestyle2"
-    ]
+    }
 }
