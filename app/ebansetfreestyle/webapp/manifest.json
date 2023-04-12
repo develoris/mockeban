@@ -24,7 +24,15 @@
                     "localUri": "localService/metadata.xml",
                     "odataVersion": "4.0"
                 }
-            }
+            },
+            "ZPRAPPROVALSRV": {
+                "uri": "/api/v2/srv/ZPRAPPROVALSRV/",
+                "type": "OData",
+                "settings": {
+                  "odataVersion": "4.0",
+                  "localUri": "localService/metadata.xml"
+                }
+              }
         },
         "crossNavigation": {
             "inbounds": {
@@ -93,7 +101,20 @@
                     "autoExpandSelect": true,
                     "earlyRequests": true
                 }
-            }
+            },
+            "LocalModel": {
+                "type": "sap.ui.model.json.JSONModel"
+              },
+              "PRApprovalCAP": {
+                "dataSource": "ZPRAPPROVALSRV",
+                "preload": true,
+                "settings": {
+                  "operationMode": "Server",
+                  "groupId": "$direct",
+                  "synchronizationMode": "None",
+                  "autoExpandSelect": true
+                }
+              }
         },
         "resources": {
             "css": [
